@@ -1,4 +1,5 @@
 #include "UART.h"
+
 volatile uint8_t RX_BUFFER[TAMANIO_RX]; //Data bits + control bit
 volatile uint8_t TX_BUFFER[TAMANIO_TX]; //N-1 bits data
 volatile struct Buffer rx_posicion;
@@ -35,7 +36,7 @@ void parsing_bcd_to_decimal(uint8_t *s, uint8_t *min, uint8_t *h, uint8_t *d, ui
 uint8_t bcd_to_decimal(uint8_t bcd) {
 	return ((bcd >> 4) * 10) + (bcd & 0x0F);
 }
-void enviar_mensaje(char *msg) {
+void enviar_mensaje(uint8_t *msg) {
 	uint8_t i = 0;
 
 	while (msg[i] != '\0') {

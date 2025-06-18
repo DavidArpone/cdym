@@ -3,21 +3,23 @@
 
 #include "main.h"
 
+enum stateMachineStates{
+	START, INIT, WAIT, ST_ON, ST_OFF, SET_TIME, SET_ALARM
+};
 
 enum stateFlag{
 	KEEP, NEXT, NEXT_ON, NEXT_OFF, NEXT_ST, NEXT_SA
-} sflg;
+} flag;
 
 enum timerInterruptFlag{
 	ON, OFF
-} tiflg;
+} FLAG_INT;
 
-enum stateMachineStates{
-	START, INIT, WAIT, ON, OFF, SET_TIME, SET_ALARM
-} sms;
+enum interruptTimerStateFlag{
+	ENABLED, DISABLED
+} FLAG_ON;
 
-extern volatile tiflg FLAG_INT = OFF;
-extern volatile sflg flag = KEEP;
+
 
 void updateMef();
 void state_START();
@@ -26,6 +28,6 @@ void state_WAIT();
 void state_ON();
 void state_SET_TIME();
 void state_SET_ALARM();
-sms getState();
+enum stateMachineStates getState();
 
 #endif

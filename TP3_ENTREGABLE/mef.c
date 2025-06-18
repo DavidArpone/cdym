@@ -1,17 +1,9 @@
 #include "mef.h"
 
-enum stateMachineStates{
-	START, INIT, WAIT, ON, OFF, SET_TIME, SET_ALARM
-} sms;
-
-enum interruptTimerStateFlag{
-	ENABLED, DISABLED
-} itsf;
-
-static volatile sms st = START;
-volatile sflg flag = KEEP;
-static volatile itsf FLAG_ON = DISABLED;
-volatile tiflg FLAG_INT = OFF;
+static enum stateMachineStates st = START;
+enum stateFlag flag = KEEP;
+enum interruptTimerStateFlag FLAG_ON = DISABLED;
+enum timerInterruptFlag FLAG_INT = OFF;
 
 void updateMef(){
 	
@@ -37,11 +29,11 @@ void updateMef(){
 			switch(flag){
 				case NEXT_ON:
 					flag = KEEP;
-					st = ON;
+					st = ST_ON;
 					break;
 				case NEXT_OFF:
 					flag = KEEP;
-					st = OFF;
+					st = ST_OFF;
 					break;
 				case NEXT_ST:
 					flag = KEEP;
@@ -58,7 +50,7 @@ void updateMef(){
 			
 			break;
 			
-		case ON:
+		case ST_ON:
 			
 			if(FLAG_ON == DISABLED){
 				FLAG_ON = ENABLED;
@@ -68,7 +60,7 @@ void updateMef(){
 			
 			break;
 			
-		case OFF:
+		case ST_OFF:
 			
 			if(FLAG_ON == ENABLED){
 				FLAG_ON = DISABLED;
@@ -99,7 +91,7 @@ void updateMef(){
 	
 }
 
-sms getState(){
+enum stateMachineStates getState(){
 	
 	return st;
 	
@@ -164,12 +156,13 @@ void state_ON(){
 	char mensaje[20];
 	uint8_t s,min,h,d,mes,a;
 	
-	if(FLAG_INT){
-		get_time(&s,&min,&h,&d,&mes,&a);
-		build_msg(mensaje,&s,&min,&h,&d,&mes,&a);
-		enviar_mensaje(mensaje);
-		FLAG_INT = OFF;
-	}
+	
+	get_time(&s,&min,&h,&d,&mes,&a);
+	build_msg(mensaje,&s,&min,&h,&d,&mes,&a);
+	enviar_mensaje(mensaje);
+	FLAG_INT = OFF;
+	
+	
 }
 
 
@@ -183,3 +176,21 @@ void state_SET_ALARM(){
 	flag = NEXT;
 }
 
+void timer1_init() {
+	
+	TCCR1B |= (1 << WGM12);					//Modo CTC (Clear Timer on Compare Match)
+	TCCR1B |= (1 << CS12) | (1 << CS10);	//Prescaler 1024
+	OCR1A = 15624;							//Valor de comparación para 1 segundo
+	
+	if(FLAG_INT == ON){
+		TIMSK1 |= (1 << OCIE1A);			//Habilitar interrupción por comparación A
+	}
+	if(FLAG_INT == OFF){
+		
+		TIMSK1 &= ~(1 << OCIE1A);			//Deshabilito la interrupcion por comparacion
+		
+	}
+	
+	TCNT1 = 0;								// Inicializar contador
+	sei();									// Habilitar interrupciones globales
+}

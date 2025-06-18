@@ -19,5 +19,6 @@ void parsing_bcd_to_decimal(uint8_t *s, uint8_t *min, uint8_t *h, uint8_t *d, ui
 uint8_t decimal_to_bcd(uint8_t decimal);
 void parsing_decimal_to_bcd(uint8_t *s, uint8_t *min, uint8_t *h, uint8_t *d, uint8_t *mes, uint8_t *a);
 uint8_t bcd_to_decimal(uint8_t bcd);
-void build_msg(char* buffer_mensaje,uint8_t *s, uint8_t *min, uint8_t *h, uint8_t *d, uint8_t *mes, uint8_t *a)
+void build_msg(char* buffer_mensaje,uint8_t *s, uint8_t *min, uint8_t *h, uint8_t *d, uint8_t *mes, uint8_t *a);
+
 #endif

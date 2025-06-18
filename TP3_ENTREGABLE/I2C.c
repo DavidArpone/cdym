@@ -1,11 +1,11 @@
 #include "I2C.h"
 
-void i2c_init(void){
+void i2c_init(){
     TWSR = 0x00;		//set prescaler bits to zero
     TWBR = 152;			//SCL frequency is 50K for XTAL = 16M
     TWCR = 0x04;		//enable the TWI module
 }
-void i2c_start(void){
+void i2c_start(){
     TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);
     while ((TWCR & (1 << TWINT)) == 0);
 }

@@ -11,9 +11,14 @@
 
 #include "main.h"
 
-int main(void){
+enum stateMachineStates sms;
+
+int main(){
 	
-	//Setear valores del timer para interrumpir cada 1 segundo 
+	rx_posicion.indice_escritura = 0;
+	rx_posicion.indice_lectura = 0;
+	tx_posicion.indice_lectura = 0;
+	tx_posicion.indice_escritura = 0;
 	
 	while (1) {
 		
@@ -25,10 +30,11 @@ int main(void){
 			
 		}
 		
-				
-		switch (getState()){
+		sms = getState();
+		
+		switch (sms){
 			case START:
-				state_START()
+				state_START();
 				break;
 			case INIT:
 				state_INIT();
@@ -50,14 +56,13 @@ int main(void){
     }
 }
 
-ISR(TWI_vect){}
 ISR(USART_RX_vect){
 	
 	uint8_t dato_recibido = UDR0; //Limpiamos registro para nueva interrupcion
 	uint8_t siguiente = (rx_posicion.indice_escritura + 1) % TAMANIO_RX;
 	if(!(siguiente == rx_posicion.indice_lectura)){
 		RX_BUFFER[rx_posicion.indice_escritura] = dato_recibido; //Descarta el dato si el buffer esta lleno
-		rx_posicion.indice_escritura = siguiente
+		rx_posicion.indice_escritura = siguiente;
 	}
 	
 	if(flag != KEEP){

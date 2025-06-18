@@ -5,6 +5,7 @@
 #include <avr/io.h>
 #include <stdio.h>
 #include <avr/interrupt.h>
+#include <stdint.h>
 
 #define F_CPU 16000000UL
 #include <util/delay.h>
@@ -14,11 +15,6 @@
 
 #include "I2C.h"
 #include "UART.h"
-#include "mef.h"
-
-struct Buffer {
-	uint8_t indice_escritura;
-	uint8_t indice_lectura;
-};
+#include "mef.h" 
 
 #endif
