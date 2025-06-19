@@ -11,56 +11,52 @@
 
 #include "main.h"
 
-enum stateMachineStates sms;
-int contador = 0;
+enum interruptFlagTimer1 FLAG_TIMER = TIMER_OFF;
 
 int main(){
-	
-	TCCR0A |= (1 << WGM01);
-	TCCR0B |= (1 << CS01) | (1 << CS00); // Prescaler = 64
-
-	OCR0A = 249; // Con 16 MHz y prescaler 64 ? interrupción cada 1 ms
-
-	TIMSK0 |= (1 << OCIE0A); // Habilitar interrupción por comparación A
 	
 	rx_posicion.indice_escritura = 0;
 	rx_posicion.indice_lectura = 0;
 	tx_posicion.indice_lectura = 0;
 	tx_posicion.indice_escritura = 0;
 	
+	task_INIT();
+	task_PRINT();
+	
 	while (1) {
 		
 		
-		if(FLAG_INT == ON){
+		if(FLAG_TIMER == TIMER_ON){
 			
-			state_ON();
-			FLAG_INT = OFF;	//Limpia FLAG de temporizador
+			task_ON();
+			FLAG_TIMER = TIMER_OFF;	//Limpia FLAG de temporizador
+			
+		}
+		if(FLAG == WAIT){
+			
+			task_WAIT();
+			
+		}
+		if(FLAG == ON || FLAG == OFF){
+			
+			timer1_ENABLE();
+			FLAG = DEFAULT;
+			
+		}
+		if(FLAG == SET_ALARM){
+			
+			task_SET_ALARM();
+			FLAG = DEFAULT;
+			
+		}
+		if(FLAG == SET_TIME){
+			
+			task_SET_TIME();
+			FLAG = DEFAULT;
 			
 		}
 		
-			
-			sms = getState();
-			
-			switch (sms){
-			case START:
-			state_START();
-			break;
-			case INIT:
-			state_INIT();
-			break;
-			case WAIT:
-			state_WAIT();
-			break;
-			case SET_ALARM:
-			state_SET_ALARM();
-			break;
-			case SET_TIME:
-			state_SET_TIME();
-			break;
-			default:
-			break;
-			
-		}
+		
 			
 		
     }
@@ -75,10 +71,8 @@ ISR(USART_RX_vect){
 		rx_posicion.indice_escritura = siguiente;
 	}
 	
-	//if(flag != KEEP ){//PONER CONDICION DE ENTER
-	if( dato_recibido == '\n'){
-		updateMef();
-		//banderita on
+	if(dato_recibido == '\n'){
+		FLAG = WAIT;
 	}
 	
 }
@@ -90,37 +84,15 @@ ISR(USART_UDRE_vect){
 	tx_posicion.indice_lectura = (tx_posicion.indice_lectura + 1) % TAMANIO_TX;
 	if (tx_posicion.indice_lectura==tx_posicion.indice_escritura){
 		UCSR0B &= ~(1<<UDRIE0); // cuando mandas el ultimo byte tenes que deshabilitar la interrupcion de buffer vacio
-		
 	}
-	if(flag == NEXT){
-		//Entramos aca cuando finaliza state_Start() y state_INIT()
-		updateMef();
-	}
+	
 
 }
 	
 ISR(TIMER1_COMPA_vect){
 	
-	if(FLAG_ON == ENABLED){
-		if(FLAG_INT == OFF){
-			FLAG_INT = ON;
-		}
+	if(FLAG_TIMER == TIMER_OFF){
+		FLAG_TIMER = TIMER_ON;
 	}
 	
 }
-
-ISR(TIMER0_COMPA_vect){
-	
-	contador++;
-	
-	if (contador >= 100) {
-		contador = 0;
-
-		// Acción cada 100 ms
-		updateMef();
-	}
-	
-	
-	
-}
-

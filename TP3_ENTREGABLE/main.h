@@ -15,6 +15,10 @@
 
 #include "I2C.h"
 #include "UART.h"
-#include "mef.h" 
+#include "states.h"
+
+enum interruptFlagTimer1{
+	TIMER_ON, TIMER_OFF
+} FLAG_TIMER;
 
 #endif

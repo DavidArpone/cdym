@@ -1,4 +1,4 @@
-mef.d mef.o: .././mef.c .././mef.h .././main.h \
+states.d states.o: .././states.c .././states.h .././main.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -19,7 +19,7 @@ mef.d mef.o: .././mef.c .././mef.h .././main.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h \
  .././I2C.h .././UART.h
 
-.././mef.h:
+.././states.h:
 
 .././main.h:
 

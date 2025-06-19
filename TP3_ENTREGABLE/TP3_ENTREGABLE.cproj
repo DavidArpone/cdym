@@ -126,22 +126,22 @@
     <Compile Include="I2C.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="mef.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="main.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="mef.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="RTC.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="RTC.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="states.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="states.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="UART.c">
