@@ -12,8 +12,16 @@
 #include "main.h"
 
 enum stateMachineStates sms;
+int contador = 0;
 
 int main(){
+	
+	TCCR0A |= (1 << WGM01);
+	TCCR0B |= (1 << CS01) | (1 << CS00); // Prescaler = 64
+
+	OCR0A = 249; // Con 16 MHz y prescaler 64 ? interrupción cada 1 ms
+
+	TIMSK0 |= (1 << OCIE0A); // Habilitar interrupción por comparación A
 	
 	rx_posicion.indice_escritura = 0;
 	rx_posicion.indice_lectura = 0;
@@ -30,28 +38,30 @@ int main(){
 			
 		}
 		
-		sms = getState();
-		
-		switch (sms){
+			
+			sms = getState();
+			
+			switch (sms){
 			case START:
-				state_START();
-				break;
+			state_START();
+			break;
 			case INIT:
-				state_INIT();
-				break;
+			state_INIT();
+			break;
 			case WAIT:
-				state_WAIT();
-				break;
+			state_WAIT();
+			break;
 			case SET_ALARM:
-				state_SET_ALARM();
-				break;
+			state_SET_ALARM();
+			break;
 			case SET_TIME:
-				state_SET_TIME();
-				break;
+			state_SET_TIME();
+			break;
 			default:
-				break;	
-						
+			break;
+			
 		}
+			
 		
     }
 }
@@ -65,16 +75,16 @@ ISR(USART_RX_vect){
 		rx_posicion.indice_escritura = siguiente;
 	}
 	
-	if(flag != KEEP){//PONER CONDICION DE ENTER
+	//if(flag != KEEP ){//PONER CONDICION DE ENTER
+	if( dato_recibido == '\n'){
 		updateMef();
+		//banderita on
 	}
 	
 }
 
 
 ISR(USART_UDRE_vect){
-	
-	//Interrupme cuando se termina de enviar un mensaje por UART
 	
 	UDR0 = TX_BUFFER[tx_posicion.indice_lectura];
 	tx_posicion.indice_lectura = (tx_posicion.indice_lectura + 1) % TAMANIO_TX;
@@ -96,6 +106,21 @@ ISR(TIMER1_COMPA_vect){
 			FLAG_INT = ON;
 		}
 	}
+	
+}
+
+ISR(TIMER0_COMPA_vect){
+	
+	contador++;
+	
+	if (contador >= 100) {
+		contador = 0;
+
+		// Acción cada 100 ms
+		updateMef();
+	}
+	
+	
 	
 }
 
