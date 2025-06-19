@@ -54,8 +54,8 @@ void updateMef(){
 			
 			if(FLAG_ON == DISABLED){
 				FLAG_ON = ENABLED;
+				timer1_init();
 			}
-			
 			st = WAIT;
 			
 			break;
@@ -64,6 +64,7 @@ void updateMef(){
 			
 			if(FLAG_ON == ENABLED){
 				FLAG_ON = DISABLED;
+				timer1_init();
 			}
 			
 			st = WAIT;
@@ -100,9 +101,10 @@ enum stateMachineStates getState(){
 void state_START(){
 	UART_INIT();
 	i2c_init();
+	timer1_config();
 	sei();
-	flag = NEXT;
 	enviar_mensaje("Bienvenido :D\r\n");
+	flag = NEXT;
 }
 
 void state_INIT(){
@@ -110,8 +112,9 @@ void state_INIT(){
 	enviar_mensaje("ON\r\n");
 	enviar_mensaje("SET TIME\r\n");
 	enviar_mensaje("SET ALARM\r\n");
-	flag = NEXT;
+	
 	enviar_mensaje("OFF\r\n");
+	flag = NEXT;
 }
 
 void state_WAIT(){
@@ -176,12 +179,16 @@ void state_SET_ALARM(){
 	flag = NEXT;
 }
 
-void timer1_init() {
+void timer1_config(){
 	
 	TCCR1B |= (1 << WGM12);					//Modo CTC (Clear Timer on Compare Match)
 	TCCR1B |= (1 << CS12) | (1 << CS10);	//Prescaler 1024
 	OCR1A = 15624;							//Valor de comparación para 1 segundo
-	
+	TCNT1 = 0;								// Inicializar contador
+}
+
+void timer1_init() {
+		
 	if(FLAG_INT == ON){
 		TIMSK1 |= (1 << OCIE1A);			//Habilitar interrupción por comparación A
 	}
@@ -191,6 +198,5 @@ void timer1_init() {
 		
 	}
 	
-	TCNT1 = 0;								// Inicializar contador
-	sei();									// Habilitar interrupciones globales
+	
 }

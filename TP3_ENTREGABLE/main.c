@@ -65,7 +65,7 @@ ISR(USART_RX_vect){
 		rx_posicion.indice_escritura = siguiente;
 	}
 	
-	if(flag != KEEP){
+	if(flag != KEEP){//PONER CONDICION DE ENTER
 		updateMef();
 	}
 	
@@ -78,15 +78,18 @@ ISR(USART_UDRE_vect){
 	
 	UDR0 = TX_BUFFER[tx_posicion.indice_lectura];
 	tx_posicion.indice_lectura = (tx_posicion.indice_lectura + 1) % TAMANIO_TX;
+	if (tx_posicion.indice_lectura==tx_posicion.indice_escritura){
+		UCSR0B &= ~(1<<UDRIE0); // cuando mandas el ultimo byte tenes que deshabilitar la interrupcion de buffer vacio
+		
+	}
 	if(flag == NEXT){
 		//Entramos aca cuando finaliza state_Start() y state_INIT()
 		updateMef();
-		UCSR0B &= ~(1 << UDRIE0); //Limpiamos interrupcion
 	}
 
 }
 	
-ISR(TIMER0_COMPA_vect){
+ISR(TIMER1_COMPA_vect){
 	
 	if(FLAG_ON == ENABLED){
 		if(FLAG_INT == OFF){
