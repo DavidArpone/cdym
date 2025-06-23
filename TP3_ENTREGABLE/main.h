@@ -16,9 +16,14 @@
 #include "I2C.h"
 #include "UART.h"
 #include "states.h"
+#include "RTC.h"
 
 enum interruptFlagTimer1{
 	TIMER_ON, TIMER_OFF
 } FLAG_TIMER;
+
+enum bussyFlag{
+	BUSY, IDLE
+}FLAG_BUSY;
 
 #endif

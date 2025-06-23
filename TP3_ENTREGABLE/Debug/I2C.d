@@ -17,7 +17,7 @@ I2C.d I2C.o: .././I2C.c .././I2C.h .././main.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\delay_basic.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h \
- .././UART.h .././states.h
+ .././UART.h .././states.h .././RTC.h
 
 .././I2C.h:
 
@@ -62,3 +62,5 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 .././UART.h:
 
 .././states.h:
+
+.././RTC.h:

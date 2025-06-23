@@ -1,35 +1,5 @@
 #include "RTC.h"
 
-void rtc_write_byte(uint8_t direccion, uint8_t dato){
-    i2c_start();
-    i2c_write(0xD0);		//Write RTC address
-    i2c_write(direccion);
-    i2c_write(dato);
-    i2c_stop();
-}
-
-uint8_t rtc_read_byte(uint8_t direccion) {
-    uint8_t dato;
-    i2c_start();
-    i2c_write(0xD0);		//Write RTC address
-    i2c_write(direccion);
-    i2c_stop();
-    i2c_start();
-    i2c_write(0xD1);		//Read RTC address
-    dato = i2c_read(1);		//Read byte and send NACK
-    i2c_stop();
-    return dato;
-}
-void rtc_write_cadena(uint8_t direccion, uint8_t *dato, uint8_t tamano ){
-    i2c_start();
-    i2c_write(0xD0);		//Read RTC address
-    i2c_write(direccion);
-    for (uint8_t i = 0; i < tamano; i++)
-    {
-        i2c_write(dato[i]);
-    }
-    i2c_stop();
-}
 void set_time(uint8_t s, uint8_t min, uint8_t h, uint8_t d, uint8_t mes, uint8_t a){
     i2c_start();
 	i2c_write(0b11010000);	//Write Device Address
@@ -44,6 +14,7 @@ void set_time(uint8_t s, uint8_t min, uint8_t h, uint8_t d, uint8_t mes, uint8_t
 	i2c_write(a);			// year
 	i2c_stop();
 }
+
 void get_time(uint8_t *s, uint8_t *min, uint8_t *h, uint8_t *d, uint8_t *mes, uint8_t *a){
 	i2c_start();
 	i2c_write(0b11010000);	//Write Device Address

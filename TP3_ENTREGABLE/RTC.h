@@ -3,7 +3,7 @@
 
 #include "main.h"
 
-void rtc_write_byte(uint8_t direccion, uint8_t dato);
-uint8_t rtc_read_byte(uint8_t direccion);
-void rtc_write_cadena(uint8_t direccion, uint8_t *dato, uint8_t tamano );
+void set_time(uint8_t s, uint8_t min, uint8_t h, uint8_t d, uint8_t mes, uint8_t a);
+void get_time(uint8_t *s, uint8_t *min, uint8_t *h, uint8_t *d, uint8_t *mes, uint8_t *a);
+
 #endif
